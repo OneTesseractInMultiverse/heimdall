@@ -6,7 +6,7 @@ from flask import (
 from flask_jwt_extended import (
     JWTManager
 )
-from spartan.background_tasks import (
+from heimdall.background_tasks import (
     init_async_service
 )
 
@@ -16,9 +16,10 @@ from spartan.background_tasks import (
 # ------------------------------------------------------------------------------
 
 __version__ = '1.0.0'
-app = Flask('spartan')
-app.logger.info("")
+app = Flask('heimdall-identity-server')
+app.logger.info("Starting... Heimdall Identity Server (Initializing)")
 app.config.from_object('config')
+app.logger.info("Starting... Heimdall Identity Server (Configuration Loaded)")
 app.debug = True
 
 # ------------------------------------------------------------------------------
@@ -49,5 +50,6 @@ app.debug = True
     settings that must exist prior importing the endpoints
 """
 
-from spartan.endpoints import *
+from heimdall.endpoints import *
+app.logger.info("Running... Heimdall Identity Server (Started)")
 

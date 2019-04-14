@@ -1,5 +1,5 @@
 import os
-from spartan import app
+from heimdall import app
 
 __author__ = "PyMicron"
 __version__ = "1.0.0"

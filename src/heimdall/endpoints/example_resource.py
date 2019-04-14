@@ -1,4 +1,4 @@
-from spartan import (
+from heimdall import (
     app
 )
 from flask import (
@@ -7,7 +7,7 @@ from flask import (
     url_for
 )
 
-from spartan.security.authorization import (
+from heimdall.security.authorization import (
     require_claims
 )
 from flask_jwt_extended import (
