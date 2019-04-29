@@ -8,7 +8,11 @@ Base = declarative_base()
 metadata = Base.metadata
 
 
+# -----------------------------------------------------------------------------
+# CLASS ABSTRACT REPOSITORY
+# -----------------------------------------------------------------------------
 class IsxApplication(Base):
+
     __tablename__ = 'isx_application'
 
     application_id = Column(UUID, primary_key=True)
@@ -21,6 +25,24 @@ class IsxApplication(Base):
     configuration = Column(JSONB(astext_type=Text()))
     last_modified = Column(DateTime)
     is_enabled = Column(Boolean)
+
+    # -------------------------------------------------------------------------
+    # PROPERTY DICTIONARY
+    # -------------------------------------------------------------------------
+    @property
+    def dictionary(self):
+        return {
+            "application_id": self.application_id,
+            "name": self.name,
+            "description": self.description,
+            "callback_url": self.callback_url,
+            "public_key": self.public_key,
+            "private_key": self.private_key,
+            "environment": self.environment,
+            "configuration": self.configuration,
+            "last_modified": self.last_modified,
+            "is_enabled": self.is_enabled
+        }
 
 
 class IsxClaimsProvider(Base):

@@ -14,6 +14,8 @@ from flask_jwt_extended import (
     jwt_required
 )
 
+from heimdall import db
+from heimdall.persistence.repositories.application_repository import ApplicationRepository
 
 # --------------------------------------------------------------------------
 # GET: /
@@ -29,6 +31,14 @@ def get_root():
             "User Agent": request.headers.get('User-Agent')
         }
     ), 200
+
+
+@app.route('/test', methods=['GET'])
+def test_get_applications():
+    application_repository = ApplicationRepository(db=db)
+    return jsonify(
+        application_repository.query({})
+    )
 
 
 
