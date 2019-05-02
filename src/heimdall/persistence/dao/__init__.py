@@ -8,9 +8,6 @@ Base = declarative_base()
 metadata = Base.metadata
 
 
-# -----------------------------------------------------------------------------
-# CLASS ABSTRACT REPOSITORY
-# -----------------------------------------------------------------------------
 class IsxApplication(Base):
 
     __tablename__ = 'isx_application'
@@ -62,88 +59,6 @@ class IsxIdentityType(Base):
 
     type_name = Column(String(40), primary_key=True)
     description = Column(String(256))
-
-
-isx_view_application_identity = Table(
-    'isx_view_application_identity', metadata,
-    Column('identity_id', UUID),
-    Column('business_id', String(40)),
-    Column('application_id', UUID),
-    Column('name', String(40))
-)
-
-
-isx_view_application_owned = Table(
-    'isx_view_application_owned', metadata,
-    Column('identity_id', UUID),
-    Column('business_id', String(40)),
-    Column('application_id', UUID),
-    Column('name', String(40)),
-    Column('is_manager', Boolean),
-    Column('is_owner', Boolean)
-)
-
-
-isx_view_application_provider = Table(
-    'isx_view_application_provider', metadata,
-    Column('application_id', UUID),
-    Column('provider_id', UUID),
-    Column('name', String(40)),
-    Column('description', String(256))
-)
-
-
-isx_view_identity_application_type = Table(
-    'isx_view_identity_application_type', metadata,
-    Column('application_id', UUID),
-    Column('type', String(40)),
-    Column('identity_count', BigInteger)
-)
-
-
-isx_view_identity_claim = Table(
-    'isx_view_identity_claim', metadata,
-    Column('identity_id', UUID),
-    Column('claim_id', UUID),
-    Column('application_id', UUID)
-)
-
-
-isx_view_identity_group = Table(
-    'isx_view_identity_group', metadata,
-    Column('identity_id', UUID),
-    Column('business_id', String(40)),
-    Column('type', String(40)),
-    Column('application_id', UUID),
-    Column('group_id', UUID),
-    Column('name', String(40)),
-    Column('description', String(256)),
-    Column('properties', JSONB(astext_type=Text()))
-)
-
-
-isx_view_identity_group_claim = Table(
-    'isx_view_identity_group_claim', metadata,
-    Column('identity_id', UUID),
-    Column('business_id', String(40)),
-    Column('type', String(40)),
-    Column('application_id', UUID),
-    Column('group_id', UUID),
-    Column('name', String(40)),
-    Column('claim_id', UUID),
-    Column('value', String(512)),
-    Column('description', String(256))
-)
-
-
-isx_view_profile_identity = Table(
-    'isx_view_profile_identity', metadata,
-    Column('identity_id', UUID),
-    Column('business_id', String(40)),
-    Column('profile_data', JSONB(astext_type=Text())),
-    Column('application_id', UUID),
-    Column('name', String(40))
-)
 
 
 class IsxApplicationProvider(Base):
@@ -272,3 +187,85 @@ class IsxProfile(Base):
 
     application = relationship('IsxApplication')
     identity = relationship('IsxIdentity')
+
+
+isx_view_application_identity = Table(
+    'isx_view_application_identity', metadata,
+    Column('identity_id', UUID),
+    Column('business_id', String(40)),
+    Column('application_id', UUID),
+    Column('name', String(40))
+)
+
+
+isx_view_application_owned = Table(
+    'isx_view_application_owned', metadata,
+    Column('identity_id', UUID),
+    Column('business_id', String(40)),
+    Column('application_id', UUID),
+    Column('name', String(40)),
+    Column('is_manager', Boolean),
+    Column('is_owner', Boolean)
+)
+
+
+isx_view_application_provider = Table(
+    'isx_view_application_provider', metadata,
+    Column('application_id', UUID),
+    Column('provider_id', UUID),
+    Column('name', String(40)),
+    Column('description', String(256))
+)
+
+
+isx_view_identity_application_type = Table(
+    'isx_view_identity_application_type', metadata,
+    Column('application_id', UUID),
+    Column('type', String(40)),
+    Column('identity_count', BigInteger)
+)
+
+
+isx_view_identity_claim = Table(
+    'isx_view_identity_claim', metadata,
+    Column('identity_id', UUID),
+    Column('claim_id', UUID),
+    Column('application_id', UUID)
+)
+
+
+isx_view_identity_group = Table(
+    'isx_view_identity_group', metadata,
+    Column('identity_id', UUID),
+    Column('business_id', String(40)),
+    Column('type', String(40)),
+    Column('application_id', UUID),
+    Column('group_id', UUID),
+    Column('name', String(40)),
+    Column('description', String(256)),
+    Column('properties', JSONB(astext_type=Text()))
+)
+
+
+isx_view_identity_group_claim = Table(
+    'isx_view_identity_group_claim', metadata,
+    Column('identity_id', UUID),
+    Column('business_id', String(40)),
+    Column('type', String(40)),
+    Column('application_id', UUID),
+    Column('group_id', UUID),
+    Column('name', String(40)),
+    Column('claim_id', UUID),
+    Column('value', String(512)),
+    Column('description', String(256))
+)
+
+
+isx_view_profile_identity = Table(
+    'isx_view_profile_identity', metadata,
+    Column('identity_id', UUID),
+    Column('business_id', String(40)),
+    Column('profile_data', JSONB(astext_type=Text())),
+    Column('application_id', UUID),
+    Column('name', String(40))
+)
