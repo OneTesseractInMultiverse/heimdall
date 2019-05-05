@@ -53,12 +53,37 @@ class IsxClaimsProvider(Base):
     implementation_class = Column(String(200), nullable=False)
     credentials = Column(JSONB(astext_type=Text()))
 
+    # -------------------------------------------------------------------------
+    # PROPERTY DICTIONARY
+    # -------------------------------------------------------------------------
+    @property
+    def dictionary(self):
+        return {
+            "property_id": self.provider_id,
+            "name": self.name,
+            "description": self.description,
+            "is_local": self.is_local,
+            "config": self.config,
+            "implementation_class": self.implementation_class,
+            "credentials": self.credentials
+        }
+
 
 class IsxIdentityType(Base):
     __tablename__ = 'isx_identity_type'
 
     type_name = Column(String(40), primary_key=True)
     description = Column(String(256))
+
+    # -------------------------------------------------------------------------
+    # PROPERTY DICTIONARY
+    # -------------------------------------------------------------------------
+    @property
+    def dictionary(self):
+        return {
+            "type_name": self.type_name,
+            "description": self.description
+        }
 
 
 class IsxApplicationProvider(Base):
@@ -70,6 +95,17 @@ class IsxApplicationProvider(Base):
 
     application = relationship('IsxApplication')
     provider = relationship('IsxClaimsProvider')
+
+    # -------------------------------------------------------------------------
+    # PROPERTY DICTIONARY
+    # -------------------------------------------------------------------------
+    @property
+    def dictionary(self):
+        return {
+            "provider_id": self.provider_id,
+            "application_id": self.application_id,
+            "created": self.created
+        }
 
 
 class IsxClaim(Base):
@@ -83,6 +119,18 @@ class IsxClaim(Base):
     application = relationship('IsxApplication')
     groups = relationship('IsxGroup', secondary='isx_group_claim')
 
+    # -------------------------------------------------------------------------
+    # PROPERTY DICTIONARY
+    # -------------------------------------------------------------------------
+    @property
+    def dictionary(self):
+        return {
+            "claim_id": self.claim_id,
+            "application_id": self.application_id,
+            "value": self.value,
+            "description": self.description
+        }
+
 
 class IsxGroup(Base):
     __tablename__ = 'isx_group'
@@ -94,6 +142,19 @@ class IsxGroup(Base):
     properties = Column(JSONB(astext_type=Text()))
 
     application = relationship('IsxApplication')
+
+    # -------------------------------------------------------------------------
+    # PROPERTY DICTIONARY
+    # -------------------------------------------------------------------------
+    @property
+    def dictionary(self):
+        return {
+            "group_id": self.group_id,
+            "application_id": self.application_id,
+            "name": self.name,
+            "description": self.description,
+            "properties": self.properties
+        }
 
 
 class IsxIdentity(Base):
@@ -109,6 +170,21 @@ class IsxIdentity(Base):
 
     isx_identity_type = relationship('IsxIdentityType')
 
+    # -------------------------------------------------------------------------
+    # PROPERTY DICTIONARY
+    # -------------------------------------------------------------------------
+    @property
+    def dictionary(self):
+        return {
+            "identity_id": self.identity_id,
+            "business_id": self.business_id,
+            "identity_data": self.identity_data,
+            "created": self.created,
+            "last_modified": self.last_modified,
+            "disabled": self.disabled,
+            "type": self.type
+        }
+
 
 class IsxApplicationIdentity(Base):
     __tablename__ = 'isx_application_identity'
@@ -119,6 +195,17 @@ class IsxApplicationIdentity(Base):
 
     application = relationship('IsxApplication')
     identity = relationship('IsxIdentity')
+
+    # -------------------------------------------------------------------------
+    # PROPERTY DICTIONARY
+    # -------------------------------------------------------------------------
+    @property
+    def dictionary(self):
+        return {
+            "identity_id": self.identity_id,
+            "application_id": self.application_id,
+            "created": self.created
+        }
 
 
 class IsxApplicationOwnership(Base):
@@ -136,6 +223,21 @@ class IsxApplicationOwnership(Base):
     application = relationship('IsxApplication')
     identity = relationship('IsxIdentity')
 
+    # -------------------------------------------------------------------------
+    # PROPERTY DICTIONARY
+    # -------------------------------------------------------------------------
+    @property
+    def dictionary(self):
+        return {
+            "identity_id": self.identity_id,
+            "application_id": self.application_id,
+            "created": self.created,
+            "from_date": self.from_date,
+            "until_date": self.until_date,
+            "is_owner": self.is_owner,
+            "is_manager": self.is_manager,
+            "configuration": self.configuration
+        }
 
 isx_group_claim = Table(
     'isx_group_claim', metadata,
@@ -162,6 +264,19 @@ class IsxIdentityClaim(Base):
     claim = relationship('IsxClaim')
     identity = relationship('IsxIdentity')
 
+    # -------------------------------------------------------------------------
+    # PROPERTY DICTIONARY
+    # -------------------------------------------------------------------------
+    @property
+    def dictionary(self):
+        return {
+            "claim_id": self.claim_id,
+            "application_id": self.application_id,
+            "identity_id": self.identity_id,
+            "from_date": self.from_date,
+            "until_date": self.until_date
+        }
+
 
 class IsxIdentityGroup(Base):
     __tablename__ = 'isx_identity_group'
@@ -177,6 +292,16 @@ class IsxIdentityGroup(Base):
     group = relationship('IsxGroup')
     identity = relationship('IsxIdentity')
 
+    # -------------------------------------------------------------------------
+    # PROPERTY DICTIONARY
+    # -------------------------------------------------------------------------
+    @property
+    def dictionary(self):
+        return {
+            "group_id": self.group_id,
+            "application_id": self.application_id,
+            "identity_id": self.identity_id
+        }
 
 class IsxProfile(Base):
     __tablename__ = 'isx_profile'
@@ -188,6 +313,16 @@ class IsxProfile(Base):
     application = relationship('IsxApplication')
     identity = relationship('IsxIdentity')
 
+    # -------------------------------------------------------------------------
+    # PROPERTY DICTIONARY
+    # -------------------------------------------------------------------------
+    @property
+    def dictionary(self):
+        return {
+            "identity_id": self.identity_id,
+            "application_id": self.application_id,
+            "profile_data": self.profile_data
+        }
 
 isx_view_application_identity = Table(
     'isx_view_application_identity', metadata,
