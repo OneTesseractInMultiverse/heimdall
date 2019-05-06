@@ -1,8 +1,8 @@
 from heimdall.abstractions.data import AbstractRepository
-from heimdall.persistence.dao import IsxClaimProvider
+from heimdall.persistence.dao import IsxClaimsProvider
 
 
-class ClaimProviderRepository(AbstractRepository):
+class ClaimsProviderRepository(AbstractRepository):
 
     def __init__(self, db):
         self.db = db
@@ -13,7 +13,7 @@ class ClaimProviderRepository(AbstractRepository):
     def query(self, match_pairs: dict) -> list:
         try:
             results = []
-            query_result = self.db.session.query(IsxClaimProvider) \
+            query_result = self.db.session.query(IsxClaimsProvider) \
                 .all()
             for identity in query_result:
                 results.append(identity.dictionary)
@@ -26,8 +26,8 @@ class ClaimProviderRepository(AbstractRepository):
     # -------------------------------------------------------------------------
     def get(self, entity_id) -> dict:
         try:
-            query_result = self.db.session.query(IsxClaimProvider) \
-                .filter(IsxClaimProvider.application_id == str(entity_id)) \
+            query_result = self.db.session.query(IsxClaimsProvider) \
+                .filter(IsxClaimsProvider.application_id == str(entity_id)) \
                 .all()
             for identity in query_result:
                 return identity.dictionary()

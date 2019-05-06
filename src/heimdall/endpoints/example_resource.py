@@ -15,7 +15,7 @@ from flask_jwt_extended import (
 )
 
 from heimdall import db
-from heimdall.persistence.repositories.application_repository import ApplicationRepository
+from heimdall.persistence.repositories.identity_group_repository import IdentityGroupRepository
 
 # --------------------------------------------------------------------------
 # GET: /
@@ -35,7 +35,7 @@ def get_root():
 
 @app.route('/test', methods=['GET'])
 def test_get_applications():
-    application_repository = ApplicationRepository(db=db)
+    application_repository = IdentityGroupRepository(db=db)
     return jsonify(
         application_repository.query({})
     )

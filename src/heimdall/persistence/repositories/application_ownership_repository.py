@@ -1,5 +1,5 @@
 from heimdall.abstractions.data import AbstractRepository
-from heimdall.persistence.dao import IsxApplication_Ownership
+from heimdall.persistence.dao import IsxApplicationOwnership
 
 
 class ApplicationOwnershipRepository(AbstractRepository):
@@ -13,7 +13,7 @@ class ApplicationOwnershipRepository(AbstractRepository):
     def query(self, match_pairs: dict) -> list:
         try:
             results = []
-            query_result = self.db.session.query(IsxApplication_Ownership) \
+            query_result = self.db.session.query(IsxApplicationOwnership) \
                 .all()
             for identity in query_result:
                 results.append(identity.dictionary)
@@ -26,8 +26,8 @@ class ApplicationOwnershipRepository(AbstractRepository):
     # -------------------------------------------------------------------------
     def get(self, entity_id) -> dict:
         try:
-            query_result = self.db.session.query(IsxApplication_Ownership)\
-                .filter(IsxApplication_Ownership.application_id == str(entity_id))\
+            query_result = self.db.session.query(IsxApplicationOwnership)\
+                .filter(IsxApplicationOwnership.application_id == str(entity_id))\
                 .all()
             for identity in query_result:
                 return identity.dictionary()

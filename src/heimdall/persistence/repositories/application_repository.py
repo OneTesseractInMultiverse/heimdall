@@ -18,7 +18,7 @@ class ApplicationRepository(AbstractRepository):
             for identity in query_result:
                 results.append(identity.dictionary)
         except Exception as e:
-            pass
+            print(str(e))
         return results
 
     # -------------------------------------------------------------------------

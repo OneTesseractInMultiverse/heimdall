@@ -31,7 +31,7 @@ import os
 # -----------------------------------------------------------------------------
 # SQLALCHEMY
 # -----------------------------------------------------------------------------
-SQLALCHEMY_DATABASE_URI = os.environ['SQLALCHEMY_DATABASE_URI']
+SQLALCHEMY_DATABASE_URI = os.environ["SQLALCHEMY_DATABASE_URI"]
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 task_serializer = 'json'

@@ -239,14 +239,32 @@ class IsxApplicationOwnership(Base):
             "configuration": self.configuration
         }
 
-isx_group_claim = Table(
-    'isx_group_claim', metadata,
-    Column('claim_id', UUID, primary_key=True, nullable=False),
-    Column('group_id', UUID, primary_key=True, nullable=False, index=True),
-    Column('application_id', UUID, primary_key=True, nullable=False, index=True),
-    ForeignKeyConstraint(['claim_id', 'application_id'], ['isx_claim.claim_id', 'isx_claim.application_id'], ondelete='CASCADE'),
-    ForeignKeyConstraint(['group_id', 'application_id'], ['isx_group.group_id', 'isx_group.application_id'], ondelete='CASCADE')
-)
+
+class IsxGroupClaim(Base):
+    __tablename__ = 'isx_group_claim'
+    __table_args__ = (
+        ForeignKeyConstraint(['claim_id', 'application_id'], ['isx_claim.claim_id', 'isx_claim.application_id'], ondelete='CASCADE'),
+        ForeignKeyConstraint(['group_id', 'application_id'], ['isx_group.group_id', 'isx_group.application_id'], ondelete='CASCADE')
+    )
+
+    group_id = Column(UUID, primary_key=True, nullable=False, index=True)
+    claim_id = Column(UUID, primary_key=True, nullable=False, index=True)
+    application_id = Column(ForeignKey('isx_application.application_id', ondelete='CASCADE'), primary_key=True, nullable=False, index=True)
+
+    application = relationship('IsxApplication')
+    claim = relationship('IsxClaim')
+    group = relationship('IsxGroup')
+
+    # -------------------------------------------------------------------------
+    # PROPERTY DICTIONARY
+    # -------------------------------------------------------------------------
+    @property
+    def dictionary(self):
+        return {
+            "group_id": self.group_id,
+            "claim_id": self.claim_id,
+            "application_id": self.application_id
+        }
 
 
 class IsxIdentityClaim(Base):
@@ -323,6 +341,7 @@ class IsxProfile(Base):
             "application_id": self.application_id,
             "profile_data": self.profile_data
         }
+
 
 isx_view_application_identity = Table(
     'isx_view_application_identity', metadata,
