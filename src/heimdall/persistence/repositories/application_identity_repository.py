@@ -30,7 +30,7 @@ class ApplicationIdentityRepository(AbstractRepository):
                 .filter(IsxApplicationIdentity.application_id == str(entity_id)) \
                 .all()
             for identity in query_result:
-                return identity.dictionary()
+                return identity.dictionary
         except Exception as e:
             pass
         return {}
