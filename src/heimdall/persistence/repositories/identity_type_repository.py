@@ -15,8 +15,8 @@ class IdentityTypeRepository(AbstractRepository):
             results = []
             query_result = self.db.session.query(IsxIdentityType) \
                 .all()
-            for identity in query_result:
-                results.append(identity.dictionary)
+            for identity_type in query_result:
+                results.append(identity_type.dictionary)
         except Exception as e:
             pass
         return results
@@ -27,19 +27,62 @@ class IdentityTypeRepository(AbstractRepository):
     def get(self, entity_id) -> dict:
         try:
             query_result = self.db.session.query(IsxIdentityType) \
-                .filter(IsxIdentityType.application_id == str(entity_id)) \
+                .filter(IsxIdentityType.type_name == str(entity_id)) \
                 .all()
-            for identity in query_result:
-                return identity.dictionary
+            for identity_type in query_result:
+                return identity_type.dictionary
         except Exception as e:
             pass
         return {}
 
+    # -------------------------------------------------------------------------
+    # METHOD CREATE
+    # -------------------------------------------------------------------------
     def create(self, state_data: dict) -> dict:
-        pass
+        try:
+            identity_type = IsxIdentityType(
+                type_name=state_data["type_name"],
+                description=state_data["description"]
+            )
+            self.db.session.add(identity_type)
+            self.db.session.commit()
+            return identity_type.dictionary
+        except Exception as e:
+            pass
+        return {}
 
+    # -------------------------------------------------------------------------
+    # METHOD UPDATE
+    # -------------------------------------------------------------------------
     def update(self, entity_id, state_data: dict) -> bool:
-        pass
+        try:
+            update_result = self.db.session.query(IsxIdentityType) \
+                .filter(IsxIdentityType.type_name == entity_id) \
+                .update(state_data)
+            self.db.session.commit()
+            return update_result
+        except Exception as e:
+            print(str(e))
+        return {}
 
+    # -------------------------------------------------------------------------
+    # METHOD DELETE
+    # -------------------------------------------------------------------------
     def delete(self, entity_id) -> dict:
-        pass
+        try:
+            # Get the item we want to delete
+            query_result = self.db.session.query(IsxIdentityType) \
+                .filter(IsxIdentityType.type_name == str(entity_id)) \
+                .all()
+
+            # Delete the item
+            self.db.session.query(IsxIdentityType) \
+                .filter(IsxIdentityType.type_name == str(entity_id)) \
+                .delete()
+            self.db.session.commit()
+
+            for identity_type in query_result:
+                return identity_type.dictionary
+        except Exception as e:
+            print(str(e))
+        return {}

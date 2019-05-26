@@ -22,7 +22,7 @@ class AbstractRepository(object):
     # METHOD GET
     # -------------------------------------------------------------------------
     @abstractmethod
-    def get(self, entity_id) -> dict:
+    def get(self, entity_id, **params) -> dict:
         pass
 
     # -------------------------------------------------------------------------
@@ -36,12 +36,12 @@ class AbstractRepository(object):
     # METHOD UPDATE ENDS
     # -------------------------------------------------------------------------
     @abstractmethod
-    def update(self, entity_id, state_data: dict) -> bool:
+    def update(self, entity_id, state_data: dict, **params) -> bool:
         pass
 
     # -------------------------------------------------------------------------
     # METHOD UPDATE ENDS
     # -------------------------------------------------------------------------
     @abstractmethod
-    def delete(self, entity_id) -> dict:
+    def delete(self, entity_id, **params) -> dict:
         pass

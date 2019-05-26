@@ -3,6 +3,7 @@ from heimdall.persistence.dao import IsxIdentity
 import uuid
 import datetime
 
+
 class IdentityRepository(AbstractRepository):
 
     def __init__(self, db):
@@ -36,6 +37,9 @@ class IdentityRepository(AbstractRepository):
             pass
         return {}
 
+    # -------------------------------------------------------------------------
+    # METHOD CREATE
+    # -------------------------------------------------------------------------
     def create(self, state_data: dict) -> dict:
         try:
             identity_id = str(uuid.uuid4())
@@ -43,23 +47,52 @@ class IdentityRepository(AbstractRepository):
                 identity_id=identity_id,
                 business_id=state_data["business_id"],
                 identity_data=state_data["identity_data"],
-                callback_url=state_data["callback_url"],
-                public_key=state_data["public_key"],
-                private_key=state_data["private_key"],
-                environment=state_data["environment"],
-                configuration=state_data["configuration"],
+                created=datetime.datetime.now(),
                 last_modified=datetime.datetime.now(),
-                is_enabled=bool(state_data["is_enabled"])
+                type=state_data["type"]
             )
-            self.db.session.add(application)
+            self.db.session.add(identity)
             self.db.session.commit()
-            return self.get(application_id)
+            return identity.dictionary
         except Exception as e:
             pass
         return {}
 
+    # -------------------------------------------------------------------------
+    # METHOD UPDATE
+    # -------------------------------------------------------------------------
     def update(self, entity_id, state_data: dict) -> bool:
-        pass
+        try:
+            state_data['last_modified'] = datetime.datetime.now()
 
+            update_result = self.db.session.query(IsxIdentity) \
+                .filter(IsxIdentity.identity_id == entity_id) \
+                .update(state_data)
+
+            self.db.session.commit()
+            return update_result
+        except Exception as e:
+            print(str(e))
+        return {}
+
+    # -------------------------------------------------------------------------
+    # METHOD DELETE
+    # -------------------------------------------------------------------------
     def delete(self, entity_id) -> dict:
-        pass
+        try:
+            # Get the item we want to delete
+            query_result = self.db.session.query(IsxIdentity) \
+                .filter(IsxIdentity.identity_id == str(entity_id)) \
+                .all()
+
+            # Delete the item
+            self.db.session.query(IsxIdentity) \
+                .filter(IsxIdentity.identity_id == str(entity_id)) \
+                .delete()
+            self.db.session.commit()
+
+            for identity in query_result:
+                return identity.dictionary
+        except Exception as e:
+            print(str(e))
+        return {}

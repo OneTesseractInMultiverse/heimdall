@@ -17,8 +17,8 @@ class ApplicationRepository(AbstractRepository):
             results = []
             query_result = self.db.session.query(IsxApplication) \
                 .all()
-            for identity in query_result:
-                results.append(identity.dictionary)
+            for application in query_result:
+                results.append(application.dictionary)
         except Exception as e:
             print(str(e))
         return results
@@ -31,8 +31,8 @@ class ApplicationRepository(AbstractRepository):
             query_result = self.db.session.query(IsxApplication)\
                 .filter(IsxApplication.application_id == str(entity_id))\
                 .all()
-            for identity in query_result:
-                return identity.dictionary
+            for application in query_result:
+                return application.dictionary
         except Exception as e:
             pass
         return {}
@@ -92,8 +92,8 @@ class ApplicationRepository(AbstractRepository):
                 .delete()
             self.db.session.commit()
 
-            for identity in query_result:
-                return identity.dictionary
+            for application in query_result:
+                return application.dictionary
         except Exception as e:
             print(str(e))
         return {}

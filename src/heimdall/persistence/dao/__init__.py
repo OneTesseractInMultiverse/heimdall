@@ -59,7 +59,7 @@ class IsxClaimsProvider(Base):
     @property
     def dictionary(self):
         return {
-            "property_id": self.provider_id,
+            "provider_id": self.provider_id,
             "name": self.name,
             "description": self.description,
             "is_local": self.is_local,
