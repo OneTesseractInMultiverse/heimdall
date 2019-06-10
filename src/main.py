@@ -1,7 +1,7 @@
 import os
 from heimdall import app
 
-__author__ = "PyMicron"
+__author__ = "Heimdall Team"
 __version__ = "1.0.0"
 
 if __name__ == "__main__":
