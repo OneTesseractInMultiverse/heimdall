@@ -36,3 +36,5 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 task_serializer = 'json'
 accept_content = ['json']
+
+# postgres://doadmin:i7spt62muvqvwaqm@dbx-london-quantica-service-do-user-3986174-0.db.ondigitalocean.com:25060/defaultdb?sslmode=require
