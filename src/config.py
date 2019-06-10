@@ -29,10 +29,10 @@ import os
 
 
 # -----------------------------------------------------------------------------
-# CELERY CONFIGURATION
+# SQLALCHEMY
 # -----------------------------------------------------------------------------
-# CELERY IS USED TO SUPPORT BACKGROUND PROCESSING
-# CELERY_BROKER_URL = os.environ['CELERY_BROKER_URL']
-# CELERY_RESULT_BACKEND = os.environ['CELERY_RESULT_BACKEND']
+SQLALCHEMY_DATABASE_URI = os.environ["SQLALCHEMY_DATABASE_URI"]
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+
 task_serializer = 'json'
 accept_content = ['json']

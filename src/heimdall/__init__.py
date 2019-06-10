@@ -9,6 +9,9 @@ from flask_jwt_extended import (
 from heimdall.background_tasks import (
     init_async_service
 )
+from flask_sqlalchemy import (
+    SQLAlchemy
+)
 
 
 # ------------------------------------------------------------------------------
@@ -21,6 +24,11 @@ app.logger.info("Starting... Heimdall Identity Server (Initializing)")
 app.config.from_object('config')
 app.logger.info("Starting... Heimdall Identity Server (Configuration Loaded)")
 app.debug = True
+
+# ------------------------------------------------------------------------------
+# DATABASE CONNECTION
+# ------------------------------------------------------------------------------
+db = SQLAlchemy(app)
 
 # ------------------------------------------------------------------------------
 # LOGGING
