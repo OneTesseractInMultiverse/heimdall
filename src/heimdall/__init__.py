@@ -9,6 +9,9 @@ from flask_jwt_extended import (
 from heimdall.background_tasks import (
     init_async_service
 )
+from heimdall.persistence.repositories.application_repository import (
+    ApplicationRepository
+)
 from flask_sqlalchemy import (
     SQLAlchemy
 )
@@ -26,9 +29,25 @@ app.logger.info("Starting... Heimdall Identity Server (Configuration Loaded)")
 app.debug = True
 
 # ------------------------------------------------------------------------------
+# SETUP JWT
+# ------------------------------------------------------------------------------
+"""
+    This API uses JWT Tokens to Authenticate call from consumers. In order to be
+    able to authenticate the call and verify JWT Tokens, we must setup 
+"""
+
+# jwt = JWTManager(app)
+
+# ------------------------------------------------------------------------------
 # DATABASE CONNECTION
 # ------------------------------------------------------------------------------
 db = SQLAlchemy(app)
+
+# ------------------------------------------------------------------------------
+# CENTRALIZED REPOSITORY OBJECTS
+# ------------------------------------------------------------------------------
+
+applications = ApplicationRepository(db=db)
 
 # ------------------------------------------------------------------------------
 # LOGGING
@@ -40,15 +59,7 @@ db = SQLAlchemy(app)
     
     @see http://flask.pocoo.org/docs/dev/logging/
 """
-# ------------------------------------------------------------------------------
-# SETUP JWT
-# ------------------------------------------------------------------------------
-"""
-    This API uses JWT Tokens to Authenticate call from consumers. In order to be
-    able to authenticate the call and verify JWT Tokens, we must setup 
-"""
 
-# jwt = JWTManager(app)
 
 # ------------------------------------------------------------------------------
 # LOAD RESOURCE ENDPOINTS
