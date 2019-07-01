@@ -8,18 +8,8 @@ from dateutil.parser import *
 class Application(ModelBase):
 
     def __init__(self, **kwargs):
-        super().__init__()
-        self.__load_state_if_available(kwargs)
+        super().__init__(**kwargs)
         self.__load_repository_if_available(kwargs)
-
-    # -------------------------------------------------------------------------
-    # METHOD LOAD STATE IF AVAILABLE
-    # -------------------------------------------------------------------------
-    def __load_state_if_available(self, arguments: dict):
-        if 'state' in arguments:
-            self._state = arguments['state']
-        else:
-            self._state = {}
 
     # -------------------------------------------------------------------------
     # METHOD LOAD REPOSITORY IF AVAILABLE
@@ -28,6 +18,9 @@ class Application(ModelBase):
         if 'repository' in arguments and isinstance(arguments['repository'], AbstractRepository):
             self.__repository = arguments['repository']
 
+    # -------------------------------------------------------------------------
+    # PROPERTY APPLICATIONS
+    # -------------------------------------------------------------------------
     @property
     def __applications(self) -> AbstractRepository:
         if self.__repository:
@@ -79,6 +72,9 @@ class Application(ModelBase):
             return parse(self._state['last_modified'])
         return None
 
+    # -------------------------------------------------------------------------
+    # METHOD COMMIT
+    # -------------------------------------------------------------------------
     def commit(self):
         if self.__applications and self._uncommitted_changes and self.id:
             if self.__applications.update(self.id, self._pending_changes):
