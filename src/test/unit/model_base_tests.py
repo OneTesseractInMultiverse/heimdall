@@ -38,3 +38,41 @@ class ModelBaseTests(unittest.TestCase):
 
         # Assert
         self.assertTrue(actual)
+
+    def test_unit_update_saves_value_on_pending_changes(self):
+        # Prepare
+        model = ModelBase(state=self.test_state)
+
+        # Act
+        expected = {
+            "state_id": "79a31f70-da87-41b3-b9a6-f946d394b387",
+            "test_property": 4321,
+            "test_property_2": "this is a test property"
+        }
+        model.update(expected)
+        actual = model.uncommitted_changes
+
+        # Assert
+        self.assertDictEqual(expected, actual)
+
+    def test_unit_property_is_updated(self):
+        # Prepare
+        model = ModelBase(state=self.test_state)
+
+        # Act
+        expected = {
+            "state_id": "79a31f70-da87-41b3-b9a6-f946d394b387",
+            "test_property": 5432,
+            "test_property_2": "this property was changed"
+        }
+
+        model.update({
+            "test_property": 5432,
+            "test_property_2": "this property was changed"
+        })
+
+        actual = model.as_dict()
+
+        # Assert
+
+        self.assertDictEqual(expected, actual)

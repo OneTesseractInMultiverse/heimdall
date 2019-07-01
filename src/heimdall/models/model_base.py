@@ -46,9 +46,16 @@ class ModelBase(AbstractModel):
         return self._uncommitted_changes
 
     # -------------------------------------------------------------------------
+    # METHOD UNCOMMITTED CHANGES
+    # -------------------------------------------------------------------------
+    @property
+    def uncommitted_changes(self) -> dict:
+        return self._pending_changes
+
+    # -------------------------------------------------------------------------
     # METHOD AS DICT
     # -------------------------------------------------------------------------
-    def as_dict(self):
+    def as_dict(self) -> dict:
         return self._state
 
     # -------------------------------------------------------------------------
