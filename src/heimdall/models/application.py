@@ -3,6 +3,7 @@ from heimdall.abstractions.data import (
     AbstractRepository
 )
 from dateutil.parser import *
+from jsonschema import validate, ValidationError
 
 
 class Application(ModelBase):
@@ -83,13 +84,64 @@ class Application(ModelBase):
         return False
 
     # -------------------------------------------------------------------------
-    # METHOD AS DICT
+    # METHOD SAVE
     # -------------------------------------------------------------------------
-    def as_dict(self):
-        pass
+    def save(self):
+        if self.__applications and self.state_valid and len(self.model_errors) == 0:
+            result = self.__applications.create(self.as_dict())
+            if result and isinstance(result, dict):
+                self._state = result
+                return True
+            return False
 
     # -------------------------------------------------------------------------
     # METHOD LOAD FROM DICT
     # -------------------------------------------------------------------------
     def load_from_dict(self):
         pass
+
+    # -------------------------------------------------------------------------
+    # PROPERTY STATE IS VALID
+    # -------------------------------------------------------------------------
+    @property
+    def state_valid(self):
+        try:
+            validate(instance=self.as_dict(), schema=self.schema)
+            return True
+        except ValidationError as ve:
+            self._add_model_error({
+                "title": "Schema Validation Error",
+                "message": str(ve.message),
+                "cause": str(ve.cause)
+            })
+            return False
+
+    # -------------------------------------------------------------------------
+    # PROPERTY SCHEMA
+    # -------------------------------------------------------------------------
+    @property
+    def schema(self) -> dict:
+        return {
+            "type": "object",
+            "properties": {
+                "application_id": {"type": "string"},
+                "name": {"type": "string"},
+                "description": {"type": "string"},
+                "callback_url": {"type": "string"},
+                "public_key": {"type": "string"},
+                "private_key": {"type": "string"},
+                "environment": {"type": "string"},
+                "configuration": {
+                    "type": "object"
+                },
+                "is_enabled": {"type": "boolean"}
+            },
+            "required": [
+                "name",
+                "description",
+                "callback_url",
+                "environment"
+            ]
+        }
+
+

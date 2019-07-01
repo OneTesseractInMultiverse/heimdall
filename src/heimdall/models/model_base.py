@@ -14,7 +14,15 @@ class ModelBase(AbstractModel):
         self._state = {}
         self._pending_changes = {}
         self._uncommitted_changes = False
+        self._model_errors = []
         self.__load_state_if_available(kwargs)
+
+    def _add_model_error(self, err: dict):
+        self._model_errors.append(err)
+
+    @property
+    def model_errors(self):
+        return self._model_errors
 
     # -------------------------------------------------------------------------
     # METHOD LOAD STATE IF AVAILABLE
