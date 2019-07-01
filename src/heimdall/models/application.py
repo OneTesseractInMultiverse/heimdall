@@ -112,7 +112,8 @@ class Application(ModelBase):
             self._add_model_error({
                 "title": "Schema Validation Error",
                 "message": str(ve.message),
-                "cause": str(ve.cause)
+                "cause": str(ve.cause),
+                "full_description": str(ve)
             })
             return False
 
@@ -124,7 +125,6 @@ class Application(ModelBase):
         return {
             "type": "object",
             "properties": {
-                "application_id": {"type": "string"},
                 "name": {"type": "string"},
                 "description": {"type": "string"},
                 "callback_url": {"type": "string"},
