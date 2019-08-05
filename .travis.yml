@@ -1,8 +1,9 @@
 dist: xenial
 language: python
 python:
+  - "3.6"
+  - "3.5"
   - "3.7"
-  - nightly
   
 branches:
   only:
@@ -14,4 +15,5 @@ install:
   - pip install -r requirements.txt
 
 script:
-  - python src/run_tests.py
+  - python src/run_tests.py -v
+
