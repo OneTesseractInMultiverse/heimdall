@@ -3,23 +3,14 @@ from heimdall.abstractions.data import (
     AbstractRepository
 )
 from dateutil.parser import *
+from jsonschema import validate, ValidationError
 
 
 class Application(ModelBase):
 
     def __init__(self, **kwargs):
-        super().__init__()
-        self.__load_state_if_available(kwargs)
+        super().__init__(**kwargs)
         self.__load_repository_if_available(kwargs)
-
-    # -------------------------------------------------------------------------
-    # METHOD LOAD STATE IF AVAILABLE
-    # -------------------------------------------------------------------------
-    def __load_state_if_available(self, arguments: dict):
-        if 'state' in arguments:
-            self._state = arguments['state']
-        else:
-            self._state = {}
 
     # -------------------------------------------------------------------------
     # METHOD LOAD REPOSITORY IF AVAILABLE
@@ -28,6 +19,9 @@ class Application(ModelBase):
         if 'repository' in arguments and isinstance(arguments['repository'], AbstractRepository):
             self.__repository = arguments['repository']
 
+    # -------------------------------------------------------------------------
+    # PROPERTY APPLICATIONS
+    # -------------------------------------------------------------------------
     @property
     def __applications(self) -> AbstractRepository:
         if self.__repository:
@@ -79,6 +73,9 @@ class Application(ModelBase):
             return parse(self._state['last_modified'])
         return None
 
+    # -------------------------------------------------------------------------
+    # METHOD COMMIT
+    # -------------------------------------------------------------------------
     def commit(self):
         if self.__applications and self._uncommitted_changes and self.id:
             if self.__applications.update(self.id, self._pending_changes):
@@ -87,13 +84,64 @@ class Application(ModelBase):
         return False
 
     # -------------------------------------------------------------------------
-    # METHOD AS DICT
+    # METHOD SAVE
     # -------------------------------------------------------------------------
-    def as_dict(self):
-        pass
+    def save(self):
+        if self.__applications and self.state_valid and len(self.model_errors) == 0:
+            result = self.__applications.create(self.as_dict())
+            if result and isinstance(result, dict):
+                self._state = result
+                return True
+            return False
 
     # -------------------------------------------------------------------------
     # METHOD LOAD FROM DICT
     # -------------------------------------------------------------------------
     def load_from_dict(self):
         pass
+
+    # -------------------------------------------------------------------------
+    # PROPERTY STATE IS VALID
+    # -------------------------------------------------------------------------
+    @property
+    def state_valid(self):
+        try:
+            validate(instance=self.as_dict(), schema=self.schema)
+            return True
+        except ValidationError as ve:
+            self._add_model_error({
+                "title": "Schema Validation Error",
+                "message": str(ve.message),
+                "cause": str(ve.cause),
+                "full_description": str(ve)
+            })
+            return False
+
+    # -------------------------------------------------------------------------
+    # PROPERTY SCHEMA
+    # -------------------------------------------------------------------------
+    @property
+    def schema(self) -> dict:
+        return {
+            "type": "object",
+            "properties": {
+                "name": {"type": "string"},
+                "description": {"type": "string"},
+                "callback_url": {"type": "string"},
+                "public_key": {"type": "string"},
+                "private_key": {"type": "string"},
+                "environment": {"type": "string"},
+                "configuration": {
+                    "type": "object"
+                },
+                "is_enabled": {"type": "boolean"}
+            },
+            "required": [
+                "name",
+                "description",
+                "callback_url",
+                "environment"
+            ]
+        }
+
+
