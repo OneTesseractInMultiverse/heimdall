@@ -1,19 +1,19 @@
 from heimdall import (
     app,
-    applications
+    identities
 )
 from flask import (
     jsonify,
     request
 )
-from heimdall.models.application import Application
+from heimdall.models.identity import Identity
 
 
-@app.route('/api/v1/application', methods=['GET'])
-def get_applications():
+@app.route('/api/v1/identity', methods=['GET'])
+def get_identities():
     try:
         query_string = request.args
-        results = applications.query(query_string)
+        results = identities.query(query_string)
         return jsonify(results), 200
     except Exception as e:
         return jsonify({
@@ -22,10 +22,10 @@ def get_applications():
         }), 500
 
 
-@app.route('/api/v1/application/<application_id>', methods=['GET'])
-def get_application(application_id):
+@app.route('/api/v1/identity/<identity_id>', methods=['GET'])
+def get_identity(identity_id):
     try:
-        result = applications.get(entity_id=application_id)
+        result = identities.get(entity_id=identity_id)
         return jsonify(result), 200
     except Exception as e:
         return jsonify({
@@ -34,33 +34,32 @@ def get_application(application_id):
         }), 500
 
 
-@app.route('/api/v1/application', methods=['POST'])
-def post_application():
+@app.route('/api/v1/identity', methods=['POST'])
+def post_identity():
     try:
-
         if not request.is_json:
             return jsonify({
                 "msg": "This API only supports JSON"
             }), 400
         data = request.get_json()
 
-        application = Application(
-            repository=applications,
+        identity = Identity(
+            repository=identities,
             state=data
         )
 
-        if not application.state_valid:
+        if not identity.state_valid:
             return jsonify({
                 "msg": "Request is not valid",
-                "errors": application.model_errors
+                "errors": identity.model_errors
             }), 400
 
-        if application.save():
-            return jsonify(application.as_dict()), 201
+        if identity.save():
+            return jsonify(identity.as_dict()), 201
 
         return jsonify({
-            "error": "Unable to create application definition",
-            "errors": application.model_errors
+            "error": "Unable to create identity definition",
+            "errors": identity.model_errors
         }), 500
 
     except Exception as e:
@@ -70,33 +69,31 @@ def post_application():
         }), 500
 
 
-@app.route('/api/v1/application/<application_id>', methods=['PUT'])
-def put_application(application_id):
+@app.route('/api/v1/identity/<identity_id>', methods=['PUT'])
+def put_identity(identity_id):
     try:
-
         if not request.is_json:
             return jsonify({
                 "msg": "This API only supports JSON"
             }), 400
-        data = request.get_json()
+        data = request.get_json
 
-        application = Application(
-            repository=applications,
-            state={"application_id": application_id}
+        identity = Identity(
+            repository=identities,
+            state={"identity_id": identity_id}
         )
 
-        application.update(data)
+        identity.update(data)
 
-        if application.commit():
+        if identity.commit():
             return jsonify({
-                "msg": "application updated"
+                "msg": "identity updated"
             }), 200
 
         return jsonify({
-            "error": "Unable to update application definition",
-            "errors": application.model_errors
+            "error": "Unable to update identity definition",
+            "errors": identity.model_errors
         }), 500
-
     except Exception as e:
         return jsonify({
             "msg": "Unable to complete request",

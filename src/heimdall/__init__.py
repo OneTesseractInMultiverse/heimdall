@@ -12,6 +12,9 @@ from heimdall.background_tasks import (
 from heimdall.persistence.repositories.application_repository import (
     ApplicationRepository
 )
+from heimdall.persistence.repositories.identity_repository import (
+    IdentityRepository
+)
 from flask_sqlalchemy import (
     SQLAlchemy
 )
@@ -48,6 +51,7 @@ db = SQLAlchemy(app)
 # ------------------------------------------------------------------------------
 
 applications = ApplicationRepository(db=db)
+identities = IdentityRepository(db=db)
 
 # ------------------------------------------------------------------------------
 # LOGGING
