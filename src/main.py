@@ -1,7 +1,7 @@
 import os
 from heimdall import app
 
-__author__ = "Heimdall Team"
+__author__ = "AppSec Class Was Here"
 __version__ = "1.0.0"
 
 if __name__ == "__main__":
